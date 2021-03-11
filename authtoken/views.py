@@ -8,8 +8,8 @@ from rest_framework.response import Response
 
 
 class UserList(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  generics.GenericAPIView):
+               mixins.CreateModelMixin,
+               generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = ReadOnlyUserSerializer
 
@@ -19,9 +19,8 @@ class UserList(mixins.ListModelMixin,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-
     def get_serializer_class(self):
-        if self.request.method in ('POST','PUT', 'PATCH'):
+        if self.request.method in ('POST', 'PUT', 'PATCH'):
             return WriteOnlyUserSerializer
         return ReadOnlyUserSerializer
 
@@ -36,12 +35,10 @@ class UserList(mixins.ListModelMixin,
         return Response(instance_serializer.data)
 
 
-
-
 class UserDetail(mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                  generics.GenericAPIView):
+                 mixins.UpdateModelMixin,
+                 mixins.DestroyModelMixin,
+                 generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = ReadOnlyUserSerializer
     lookup_field = "pk"
@@ -58,12 +55,10 @@ class UserDetail(mixins.RetrieveModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-
     def get_serializer_class(self):
-        if self.request.method in ('POST','PUT', 'PATCH'):
+        if self.request.method in ('POST', 'PUT', 'PATCH'):
             return WriteOnlyUserSerializer
         return ReadOnlyUserSerializer
-
 
     def perform_update(self, serializer):
         return serializer.save()
@@ -80,4 +75,3 @@ class UserDetail(mixins.RetrieveModelMixin,
         instance = self.perform_update(serializer)
         instance_serializer = ReadOnlyUserSerializer(instance)
         return Response(instance_serializer.data)
-
